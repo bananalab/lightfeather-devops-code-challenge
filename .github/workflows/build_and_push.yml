@@ -31,10 +31,10 @@ jobs:
         with:
           context: "{{defaultContext}}:frontend"
           push: true
-          tags: frontend:${{ github.ref }}
+          tags: frontend:${{ github.ref_name }}
       - name: Build and push backend
         uses: docker/build-push-action@v3
         with:
           context: "{{defaultContext}}:backend"
           push: true
-          tags: frontend:${{ github.ref }}
+          tags: frontend:${{ github.ref_name }}
