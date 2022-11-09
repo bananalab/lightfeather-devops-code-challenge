@@ -33,10 +33,10 @@ jobs:
         with:
           context: "{{defaultContext}}:frontend"
           push: true
-          tags: lightfeather-devops-code-challenge/frontend:${{ github.ref_name }}
+          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/lightfeather-devops-code-challenge/frontend:${{ github.ref_name }}
       - name: Build and push backend
         uses: docker/build-push-action@v3
         with:
           context: "{{defaultContext}}:backend"
           push: true
-          tags: lightfeather-devops-code-challenge/backend:${{ github.ref_name }}
+          tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/lightfeather-devops-code-challenge/backend:${{ github.ref_name }}
