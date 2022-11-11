@@ -3,16 +3,16 @@ import './App.css';
 import API_URL from './config'
 
 function App() {
-  const [successMessage, setSuccessMessage] = useState() 
-  const [failureMessage, setFailureMessage] = useState() 
+  const [successMessage, setSuccessMessage] = useState()
+  const [failureMessage, setFailureMessage] = useState()
 
   useEffect(() => {
     const getId = async () => {
       try {
         const resp = await fetch(API_URL)
-        setSuccessMessage((await resp.json()).id)
+        setSuccessMessage("SUCCESS " + (await resp.json()).id)
       }
-      catch(e) {
+      catch (e) {
         setFailureMessage(e.message)
       }
     }

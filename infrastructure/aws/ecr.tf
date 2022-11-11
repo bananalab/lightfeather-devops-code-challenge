@@ -13,3 +13,23 @@ resource "aws_ecr_repository" "this" {
     scan_on_push = true
   }
 }
+
+resource "aws_ecr_lifecycle_policy" "main" {
+  for_each   = aws_ecr_repository.this
+  repository = each.value.name
+
+  policy = jsonencode({
+    rules = [{
+      rulePriority = 1
+      description  = "keep last 10 images"
+      action = {
+        type = "expire"
+      }
+      selection = {
+        tagStatus   = "any"
+        countType   = "imageCountMoreThan"
+        countNumber = 10
+      }
+    }]
+  })
+}
