@@ -1,3 +1,5 @@
+# Define ECS resources.
+
 resource "aws_ecs_cluster" "this" {
   name = "app"
 }
@@ -17,7 +19,7 @@ resource "aws_ecs_task_definition" "app" {
         essential = true
         environment = [{
           name  = "CORS_ORIGIN"
-          value = "http://${aws_lb.this.dns_name}:3000/"
+          value = "http://${aws_lb.this.dns_name}"
         }]
         portMappings = [{
           protocol      = "tcp"
@@ -30,7 +32,7 @@ resource "aws_ecs_task_definition" "app" {
         image     = "${aws_ecr_repository.this["frontend"].repository_url}:main"
         essential = true
         environment = [{
-          name  = "API_URL"
+          name  = "REACT_APP_API_URL"
           value = "http://${aws_lb.this.dns_name}:8080/"
         }]
         portMappings = [{
@@ -44,7 +46,7 @@ resource "aws_ecs_task_definition" "app" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "test-ecsTaskExecutionRole"
+  name = "app-ecsTaskExecutionRole"
 
   assume_role_policy = <<-EOF
     {
@@ -68,17 +70,49 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_security_group" "service" {
+  name        = "allow_lb_ports"
+  description = "Allow LB ports"
+  vpc_id      = module.vpc.result.vpc.id
+
+  ingress {
+    description     = "Frontend from LB"
+    from_port       = 3000
+    to_port         = 3000
+    protocol        = "tcp"
+    security_groups = [aws_security_group.app.id]
+  }
+
+  ingress {
+    description     = "Backend from public"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.app.id]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+}
+
 resource "aws_ecs_service" "this" {
   name                               = "app"
   cluster                            = aws_ecs_cluster.this.id
   task_definition                    = aws_ecs_task_definition.app.arn
-  desired_count                      = 2
+  desired_count                      = 1
   deployment_minimum_healthy_percent = 50
   deployment_maximum_percent         = 200
   launch_type                        = "FARGATE"
+  health_check_grace_period_seconds  = 120
   scheduling_strategy                = "REPLICA"
 
   network_configuration {
+    security_groups  = [aws_security_group.service.id]
     subnets          = [for subnet in module.vpc.result.private_subnets : subnet.id]
     assign_public_ip = false
   }

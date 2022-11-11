@@ -1,4 +1,4 @@
-data "aws_caller_identity" "current" {}
+# This file defines the Terraform backend (not the application backend).
 
 module "backend_s3_bucket" {
   source             = "github.com/bananalab/terraform-modules//modules/aws-s3-bucket?ref=v0.3.1"
