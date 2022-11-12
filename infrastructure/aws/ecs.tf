@@ -37,8 +37,8 @@ resource "aws_ecs_task_definition" "app" {
         }]
         portMappings = [{
           protocol      = "tcp"
-          containerPort = 3000
-          hostPort      = 3000
+          containerPort = 80
+          hostPort      = 80
         }]
       }
     ]
@@ -77,8 +77,8 @@ resource "aws_security_group" "service" {
 
   ingress {
     description     = "Frontend from LB"
-    from_port       = 3000
-    to_port         = 3000
+    from_port       = 80
+    to_port         = 80
     protocol        = "tcp"
     security_groups = [aws_security_group.app.id]
   }
@@ -120,7 +120,7 @@ resource "aws_ecs_service" "this" {
   load_balancer {
     target_group_arn = aws_alb_target_group.frontend.arn
     container_name   = "frontend"
-    container_port   = 3000
+    container_port   = 80
   }
 
   load_balancer {

@@ -31,6 +31,7 @@ jobs:
       - name: Build and push frontend
         uses: docker/build-push-action@v3
         with:
+          build-args: api_url=${{ secrets.API_URL }}
           context: "{{defaultContext}}:frontend"
           push: true
           tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/lightfeather-devops-code-challenge-frontend:${{ github.ref_name }}
