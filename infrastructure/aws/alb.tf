@@ -13,6 +13,15 @@ resource "aws_security_group" "app" {
   }
 
   ingress {
+    description      = "HTTPS from public"
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
+  ingress {
     description      = "Backend from public"
     from_port        = 8080
     to_port          = 8080
@@ -58,14 +67,39 @@ resource "aws_alb_target_group" "frontend" {
   }
 }
 
-resource "aws_alb_listener" "frontend" {
-  load_balancer_arn = aws_lb.this.id
-  port              = 80
+resource "aws_lb_listener" "frontend" {
+  load_balancer_arn = aws_lb.this.arn
+  port              = "80"
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_alb_target_group.frontend.id
-    type             = "forward"
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_alb_listener" "frontend_https" {
+  load_balancer_arn = aws_lb.this.id
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate_validation.this.certificate_arn
+
+  default_action {
+    type = "forward"
+    forward {
+      target_group {
+        arn = aws_alb_target_group.frontend.id
+      }
+      stickiness {
+        enabled  = true
+        duration = 3600
+      }
+    }
   }
 }
 
@@ -90,10 +124,31 @@ resource "aws_alb_target_group" "backend" {
 resource "aws_alb_listener" "backend" {
   load_balancer_arn = aws_lb.this.id
   port              = 8080
-  protocol          = "HTTP"
+  protocol          = "HTTPS"
+  certificate_arn   = aws_acm_certificate_validation.this.certificate_arn
 
   default_action {
-    target_group_arn = aws_alb_target_group.backend.id
-    type             = "forward"
+    type = "forward"
+    forward {
+      target_group {
+        arn = aws_alb_target_group.backend.id
+      }
+      stickiness {
+        enabled  = true
+        duration = 3600
+      }
+    }
+  }
+}
+
+resource "aws_route53_record" "lightfeather" {
+  zone_id = data.aws_route53_zone.bananalab.zone_id
+  name    = local.app_host
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.this.dns_name
+    zone_id                = aws_lb.this.zone_id
+    evaluate_target_health = true
   }
 }

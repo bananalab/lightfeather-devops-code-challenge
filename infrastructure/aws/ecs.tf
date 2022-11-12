@@ -19,7 +19,7 @@ resource "aws_ecs_task_definition" "app" {
         essential = true
         environment = [{
           name  = "CORS_ORIGIN"
-          value = "http://${aws_lb.this.dns_name}"
+          value = "https://${aws_route53_record.lightfeather.name}"
         }]
         portMappings = [{
           protocol      = "tcp"
@@ -31,10 +31,6 @@ resource "aws_ecs_task_definition" "app" {
         name      = "frontend"
         image     = "${aws_ecr_repository.this["frontend"].repository_url}:main"
         essential = true
-        environment = [{
-          name  = "REACT_APP_API_URL"
-          value = "http://${aws_lb.this.dns_name}:8080/"
-        }]
         portMappings = [{
           protocol      = "tcp"
           containerPort = 80
