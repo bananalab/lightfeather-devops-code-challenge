@@ -53,7 +53,8 @@ pushed to the docker registry on AWS where they can be deployed.
 
 ![diagram](docs/diagram.png "Diagram")
 
-The infrastructure is defined in Terraform code found in the `infrastructure` directory.
+The infrastructure is defined in Terraform code found in the
+[infrastructure](infrastructure) directory.
 > Additional Terraform modules referenced can be found in the
 [terraform-modules repo](https://github.com/bananalab/terraform-modules)
 
