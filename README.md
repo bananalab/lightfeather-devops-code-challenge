@@ -92,9 +92,9 @@ terraform apply tfplan.out
 ## Application Build System
 
 The application consists of two docker images built by Github actions. The
-build pipeline definition can be found in
-`.github/workflows/build_and_push.yml`. The build pipeline requires a number of
- inputs:
+build pipeline definition can be found in the
+[workflows](.github/workflows/) directory. The build pipeline requires a number of
+inputs:
 
 `AWS_ACCOUNT_ID`: Account number of AWS account to deploy to. Used in
 authentication to ECR.
@@ -112,3 +112,4 @@ These are configured as `Repository Secrets` in the GitHub repo.
 
 1. Tests and test automation.  There are currently no tests.
 2. Application and infrastructure deployment automation.
+3. Branching model and deployment stages.
