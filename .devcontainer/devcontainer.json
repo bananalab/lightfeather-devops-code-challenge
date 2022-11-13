@@ -1,40 +1,40 @@
 {
-	"name": "Docker from Docker",
-	"dockerFile": "Dockerfile",
-	"runArgs": [
-		"--init"
-	],
-	"mounts": [
-		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
-	],
-	"overrideCommand": false,
-	"remoteEnv": {
-		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"amazonwebservices.aws-toolkit-vscode",
-				"Bridgecrew.checkov",
-				"hashicorp.hcl",
-				"hashicorp.terraform",
-				"hashicorp.sentinel",
-				"jock.svg",
-				"ms-kubernetes-tools.vscode-kubernetes-tools",
-				"ms-vscode.makefile-tools",
-				"SimonSiefke.svg-preview",
-				"Trunk.io"
-			],
-			"settings": {}
-		}
-	},
-	"features": {
-		"ghcr.io/bananalab/devcontainer-features/aws-cli:latest": {},
-		"ghcr.io/bananalab/devcontainer-features/checkov:latest": {},
-		"ghcr.io/bananalab/devcontainer-features/direnv:latest": {},
-		"ghcr.io/bananalab/devcontainer-features/gomplate:latest": {},
-		"ghcr.io/bananalab/devcontainer-features/pre-commit:latest": {},
-		"ghcr.io/bananalab/devcontainer-features/terraform-tools:latest": {}
-	},
-	"remoteUser": "vscode"
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "amazonwebservices.aws-toolkit-vscode",
+        "Bridgecrew.checkov",
+        "hashicorp.hcl",
+        "hashicorp.terraform",
+        "hashicorp.sentinel",
+        "jock.svg",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "ms-vscode.makefile-tools",
+        "SimonSiefke.svg-preview",
+        "Trunk.io"
+      ],
+      "settings": {}
+    }
+  },
+  "dockerFile": "Dockerfile",
+  "features": {
+    "ghcr.io/bananalab/devcontainer-features/aws-cli:latest": {},
+    "ghcr.io/bananalab/devcontainer-features/direnv:latest": {},
+    "ghcr.io/bananalab/devcontainer-features/gomplate:latest": {},
+    "ghcr.io/bananalab/devcontainer-features/pre-commit:latest": {},
+    "ghcr.io/bananalab/devcontainer-features/terraform-tools:latest": {}
+  },
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
+  ],
+  "name": "Docker from Docker",
+  "overrideCommand": false,
+  "postStartCommand": "pre-commit install",
+  "remoteEnv": {
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+  },
+  "remoteUser": "vscode",
+  "runArgs": [
+    "--init"
+  ]
 }

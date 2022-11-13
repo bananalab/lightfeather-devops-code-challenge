@@ -15,17 +15,10 @@ to provide a consistent developer experience regardless of opeating system.
 To open the project in the devcontainer using VSCode select "Reopen in
 container" from the dialog.
 
- ![diagram](docs/dialog.png "Dialog")
+<img src="docs/dialog.png" alt="drawing" width="300"/>
 
 The devcontainer includes all tools required to develop, build, and deploy the
-application and infrastructure. Once the project is open in the devcontainer
-run
-
- ```bash
- pre-commit setup
- ```
-
- to enable pre-commit code checks.
+application and infrastructure.
 
 > In order to build and deploy the application and infrastructure you will need
 AWS and Github credentials.  Ask you systems administrator to provide them.
