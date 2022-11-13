@@ -11,7 +11,7 @@ a build pipeline to create deployable artifacts.
 
 This project uses
 [Devcontainers](https://code.visualstudio.com/docs/devcontainers/containers)
-to provide a consistent developer experience regardless of opeating system.
+to provide a consistent developer experience regardless of operating system.
 To open the project in the devcontainer using VSCode select "Reopen in
 container" from the dialog.
 
